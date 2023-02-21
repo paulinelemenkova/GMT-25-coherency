@@ -29,8 +29,8 @@ gmt grdcut @earth_wdmam_03m -R14/28/2/11.5 -Gcf_mag_wdmam.nc
 gmt grdfft cf_mag_wdmam.nc cf_relief.nc -E+wk+n -Na+d+wtmp > cross_spectra1.txt
 
 gmt set FONT_TITLE 12p GMT_FFT kiss
-gmt makecpt -Crainbow -T212/1820 > z.cpt # topo
-gmt makecpt -Crainbow -T-40/40 > g.cpt # geoid
+gmt makecpt -Cturbo -T212/1820 > z.cpt # topo
+gmt makecpt -Crainbow -T-18/18 > g.cpt # geoid
 gmt makecpt -Cjet.cpt -T-40/40 > c.cpt # grav
 gmt makecpt -Chaxby.cpt -T-85/80 > d.cpt # vert grav
 gmt makecpt -Cwysiwyg.cpt -T-1000/512 > m.cpt # EMAG2
@@ -40,56 +40,60 @@ ps=Coherency_CF.ps
 #----------------->
 # map 1 lower left
 gmt grdimage cf_relief.nc -R14/28/2/11.5 \
-    -I+a0+nt1 -JM5.5c -Cz.cpt -P -K -X1.474i -Y1i > $ps
-gmt psbasemap -R14/28/2/11.5 -JM5.5c \
+    -I+a0+nt1 -JM6.0c -Cz.cpt -P -K -X1.474i -Y1i > $ps
+gmt psbasemap -R14/28/2/11.5 -JM6.0c \
     -Ba -BWSne+t"IGPP Global Earth Relief"  \
     -UBL/-5p/-40p \
     --MAP_TITLE_OFFSET=0.1c -O -K >> $ps
 #----------------->
 # map 2 lower right
 gmt grdimage geoid_CF.grd -R14/28/2/11.5 \
-    -I+a0+nt1 -JM5.5c -Cg.cpt -O -K -X3.25i >> $ps
-gmt psbasemap -R14/28/2/11.5 -JM5.5c \
+    -I+a0+nt1 -JM6.0c -Cg.cpt -O -K -X7.5c >> $ps
+gmt psbasemap -R14/28/2/11.5 -JM6.0c \
     --MAP_TITLE_OFFSET=0.1c -Ba -BWSne+t"Geoid model EGM2008" -O -K  >> $ps
 #----------------->
 # map 3 upper left
-gmt grdimage gravvert_CF.grd -R14/28/2/11.5 -I+a0+nt1 -JM5.5c \
-    -Cc.cpt -O -K -X-3.25i -Y7.2c >> $ps
-gmt psbasemap -R14/28/2/11.5 -JM5.5c -Ba \
+gmt grdimage gravvert_CF.grd -R14/28/2/11.5 -I+a0+nt1 -JM6.0c \
+    -Cc.cpt -O -K -X-7.5c -Y6.0c >> $ps
+gmt psbasemap -R14/28/2/11.5 -JM6.0c -Ba \
     -BWSne+t"Vertical gravity gradient" \
     --MAP_TITLE_OFFSET=0.1c -O -K >> $ps
 #----------------->
 # map 4 upper right
-gmt grdimage grav_CF.grd -R14/28/2/11.5 -I+a0+nt1 -JM5.5c -Cd.cpt -O -K -X3.25i >> $ps
-gmt psbasemap -R14/28/2/11.5 -JM5.5c -Ba -BWSne+t"Free-air gravity anomaly" \
+gmt grdimage grav_CF.grd -R14/28/2/11.5 -I+a0+nt1 -JM6.0c -Cd.cpt -O -K -X7.5c >> $ps
+gmt psbasemap -R14/28/2/11.5 -JM6.0c -Ba -BWSne+t"Free-air gravity anomaly" \
     --MAP_TITLE_OFFSET=0.1c -O -K >> $ps
 #----------------->
 # map 5 upper left EMAG2
-gmt grdimage cf_mag.nc -R14/28/2/11.5 -I+a0+nt1 -JM5.5c \
-    -Cm.cpt -O -K -X-3.25i -Y7.2c >> $ps
-gmt psbasemap -R14/28/2/11.5 -JM5.5c -Ba -BWSne+t"EMAG2 for CAR" \
+gmt grdimage cf_mag.nc -R14/28/2/11.5 -I+a0+nt1 -JM6.0c \
+    -Cm.cpt -O -K -X-7.5c -Y6.0c >> $ps
+gmt psbasemap -R14/28/2/11.5 -JM6.0c -Ba -BWSne+t"EMAG2 for CAR" \
     --MAP_TITLE_OFFSET=0.1c -O -K >> $ps
 # Bangui magnetic anomaly
 gmt psbasemap -R -J -D18/5/22/7r -F+pthickest,white -O -K >> $ps
 #----------------->
 # map 6 upper right
-gmt grdimage cf_mag_wdmam.nc -R14/28/2/11.5 -I+a0+nt1 -JM5.5c -Cn.cpt -O -K -X3.25i >> $ps
+gmt grdimage cf_mag_wdmam.nc -R14/28/2/11.5 -I+a0+nt1 -JM6.0c -Cn.cpt -O -K -X7.5c >> $ps
 # Bangui magnetic anomaly
 gmt psbasemap -R -J -D18/5/22/7r -F+pthickest,white -O -K >> $ps
-gmt psbasemap -R145/200/-39/0 -JM5.5c -Ba -BWSne+t"WDMAM for CAR" \
+gmt psbasemap -R14/28/2/11.5 -JM6.0c -Ba -BWSne+t"WDMAM for CAR" \
     --MAP_TITLE_OFFSET=0.1c -O -K >> $ps
 #----------------->
 # график
-gmt psxy -R3/100/0/1 -JX14.0cl/3.5c -Bxg3f1a2+u" mGal" \
-    -Byafg0.2+l"Coherency@+2@+" \
-    -BWSnE+t"Coherency between vertical gravity gradient and free-air gravity anomaly" \
-    -X-3.25i -Y7.0c cross_spectra.txt -i0,15 -W0.1p -O -K >> $ps
-gmt psxy -R -J cross_spectra.txt -i0,15,16 -Sc0.075i -Gred -W0.25p -Ey -O -K >> $ps
-#gmt psxy -R -J -T -O -K >> $ps
+#gmt psxy -R3/100/0/1 -JX14.0cl/3.5c -Bxg3f1a2+u"mGal" -Byaf0.04g0.2+l"Coherency@+2@+" \
+    -BWSnE+t"Coherency between vertical gradient and free-air gravity anomaly"+gmintcream \
+    -X-7.5cm -Y6.0c cross_spectra.txt -i0,15 -W0.1p -O -K >> $ps
+gmt psxy -R3/100/0/1 -JX14.0cl/3.5c -Bx2g3+u"mGal" -Byaf0.04g0.2+l"Coherency@+2@+" \
+    -BWSnE+t"Coherency between vertical gradient and free-air gravity anomaly"+gazure \
+    --MAP_GRID_PEN_PRIMARY=thinnest,dimgray \
+    --MAP_GRID_PEN_SECONDARY=thinner,dimgray \
+    -X-7.5cm -Y6.0c cross_spectra.txt -i0,15 -W0.1p -O -K >> $ps
+gmt psxy -R -J cross_spectra.txt -i0,15,16 -Sc0.15c -Gred -W0.25p -Ey -O -K >> $ps
 #
 # Step-11. Add GMT logo
-gmt logo -Dx3.25i/-2.2i+o-2.0c/-17.5c+w2c -O >> $ps
+gmt logo -Dx7.5c/-2.0c+o-2.0c/-17.5c+w2c -O >> $ps
 # Step-15. Convert to image file using GhostScript
 gmt psconvert Coherency_CF.ps -A1.0c -E720 -Tj -Z
 # Unix
-# rm -f cross.txt *_tmp.nc ?.cpt bbox
+rm -f cross.txt *_tmp.nc ?.cpt bbox
+
